@@ -53,7 +53,7 @@ namespace Day7
             foreach(Node newCurrentNode in childNodes)
             {
                 newCurrentNode.ParentNodeName = currentNode.Name;
-                 WalkTheTree(newCurrentNode,depth+1);
+                WalkTheTree(newCurrentNode,depth+1);
             }
             currentNode.WeightOfAllDescendants = childNodes.Sum(x => x.WeightOfAllDescendants + x.Weight);
             currentNode.Depth = depth;
