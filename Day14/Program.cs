@@ -11,7 +11,8 @@ namespace Day14
     {
         static void Main(string[] args)
         {
-            DotOne();
+            //DotOne();
+            DotTwo();
         }
         static void DotOne()
         {
@@ -31,6 +32,99 @@ namespace Day14
             Console.ReadKey();
 
         }
+        static void DotTwo()
+        {
+            string puzzleInput = "xlqgujun";
+            List<String> binaryGrid = new List<string>();
+            Dictionary<int[,], int> gridLabels = new Dictionary<int[,], int>();
+            Dictionary<int, List<int>> regionEquivs = new Dictionary<int, List<int>>();
+            int regionLabel = 1;
+            int answer = 0;
+
+            for (int i = 0; i < 128; i++)
+            {
+                string hashInput = puzzleInput + "-" + i.ToString();
+                var blah = KnotHash(hashInput);
+                string binarystring = String.Join(String.Empty, blah.Select(c => Convert.ToString(Convert.ToInt32(c.ToString(), 16), 2).PadLeft(4, '0')));
+                binaryGrid.Add(binarystring);
+            }
+
+            for(int y = 127;y >=0;y--)
+            {
+                for (int x = 0; x <= 127; x++)
+                {
+                    //only if > 0
+                    if (IsUsedBit(binaryGrid, x, y))
+                    {
+                        
+                        if(IsWestSameValue(binaryGrid, x, y))
+                        {
+                            //Same Region Same Label as west
+                            if(gridLabels.ContainsKey(new int[x - 1, y]))
+                            {
+                                gridLabels[new int[x, y]] = gridLabels[new int[x - 1, y]];
+                            }
+                            else
+                            {
+                                gridLabels[new int[x, y]] = regionLabel;
+                            }
+                        }
+                        else if(IsNorthAndWestAndCurrentSameValueDifferentLabel(binaryGrid, x, y))
+                        {
+
+                        }
+                        else if(false)
+                        {
+
+                        }
+                        else
+                        {
+                            regionLabel += 1;
+                            gridLabels[new int[x, y]] = regionLabel;
+                        }
+
+                    }
+
+                }
+            }
+
+            for (int y = 127; y >= 0; y--)
+            {
+                for (int x = 0; x < 128; x++)
+                {
+                }
+            }
+
+            answer = gridLabels.Distinct().Count();
+            Console.WriteLine(answer);
+            Console.ReadKey();
+        }
+
+        static bool IsUsedBit(List<String>binaryGrid,int xCoord,int yCoord)
+        {
+            var checkMe = binaryGrid[yCoord].Select(bs => bs).ToList()[xCoord];
+
+            return !checkMe.Equals('0');
+        }
+
+        static bool IsWestSameValue(List<String> binaryGrid, int xCoord, int yCoord)
+        {
+            var currentBitVal = int.Parse(binaryGrid[yCoord].Select(bs => bs).ToList()[xCoord].ToString());
+            var westBitVal = int.Parse(binaryGrid[yCoord].Select(bs => bs).ToList()[Math.Max(0, xCoord - 1)].ToString());
+
+            return currentBitVal == westBitVal;
+        }
+
+        static bool IsNorthAndWestAndCurrentSameValueDifferentLabel(List<String> binaryGrid, int xCoord, int yCoord)
+        {
+            return true;
+        }
+
+        static bool IsWestDifferentNorthSame(List<String> binaryGrid, int xCoord, int yCoord)
+        {
+            return true;
+        }
+
 
         static string KnotHash(string input)
         {
